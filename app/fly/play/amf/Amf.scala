@@ -12,6 +12,7 @@ import java.io.ByteArrayOutputStream
 import com.exadel.flamingo.flex.messaging.amf.io.AMF3Deserializer
 import com.exadel.flamingo.flex.messaging.amf.io.AMF3Serializer
 import java.io.ByteArrayInputStream
+import scala.language.reflectiveCalls
 
 trait Amf extends BodyParsers { self:Controller =>
   
