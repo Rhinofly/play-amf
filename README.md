@@ -1,4 +1,4 @@
-Play 2.0 module for AMF communication
+Play 2.1 module for AMF communication
 =====================================
 
 Small library module that allows you to use AMF to communicate with clients.
@@ -11,7 +11,7 @@ Installation
 Add a resolver to your project settings:
 
 ``` scala
-val main = PlayProject(appName, appVersion, appDependencies, mainLang = SCALA).settings(
+val main = play.Project(appName, appVersion, appDependencies, mainLang = SCALA).settings(
     resolvers += "Rhinofly Internal Repository" at "http://maven-repository.rhinofly.net:8081/artifactory/libs-release-local"
 )
 ```
