@@ -1,14 +1,15 @@
 import sbt._
 import Keys._
-import PlayProject._
-import scala.io.Source
+import play.Project._
 
 object ApplicationBuild extends Build {
 
   val appName = "amf"
-  val appVersion = "1.0.1"
+  val appVersion = "2.0.1"
 
   val appDependencies = Seq(
+	jdbc,
+    anorm,
     "com.exadel.flamingo.flex" % "amf-serializer" % "1.5.0")
 
   def rhinoflyRepo(version:String) = {
@@ -16,7 +17,7 @@ object ApplicationBuild extends Build {
 	Some("Rhinofly Internal " + repo.capitalize + " Repository" at "http://maven-repository.rhinofly.net:8081/artifactory/libs-" + repo + "-local")
   }
     
-  val main = PlayProject(appName, appVersion, appDependencies).settings(
+  val main = play.Project(appName, appVersion, appDependencies).settings(
     organization := "nl.rhinofly",
     publishTo <<= version(rhinoflyRepo),
     credentials += Credentials(Path.userHome / ".ivy2" / ".credentials")
