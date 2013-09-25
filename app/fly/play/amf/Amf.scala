@@ -13,27 +13,31 @@ import com.exadel.flamingo.flex.messaging.amf.io.AMF3Deserializer
 import com.exadel.flamingo.flex.messaging.amf.io.AMF3Serializer
 import java.io.ByteArrayInputStream
 import scala.language.reflectiveCalls
+import scala.concurrent.Future
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
-trait Amf extends BodyParsers { self:Controller =>
-  
-	def amfParser[A]: BodyParser[A] = parse.when(
-	  _.contentType.exists(_ == "application/x-amf"),
-      tolerantAmfParser,
-      request => Play.maybeApplication.map(_.global.onBadRequest(request, "Expecting application/x-amf body")).getOrElse(Results.BadRequest)
-	)
-	
-	def tolerantAmfParser[A]: BodyParser[A] = BodyParser("amf") { request =>
-	  Iteratee.consume[Array[Byte]]().mapDone { x =>
-		  val derializer = new AMF3Deserializer(new ByteArrayInputStream(x))
-		  Right(derializer.readObject().asInstanceOf[A])
-	  }
+trait Amf extends BodyParsers { self: Controller =>
+
+  def amfParser[A]: BodyParser[A] = parse.when(
+    _.contentType.exists(_ == "application/x-amf"),
+    tolerantAmfParser,
+    request =>
+      Play.maybeApplication
+        .map(_.global.onBadRequest(request, "Expecting application/x-amf body"))
+        .getOrElse(Future successful Results.BadRequest))
+
+  def tolerantAmfParser[A]: BodyParser[A] = BodyParser("amf") { request =>
+    Iteratee.consume[Array[Byte]]().map { x =>
+      val derializer = new AMF3Deserializer(new ByteArrayInputStream(x))
+      Right(derializer.readObject().asInstanceOf[A])
     }
-	
-	def Amf(data:Any):Result = {
-		val b = new ByteArrayOutputStream();
-		
-		val serializer = new AMF3Serializer(b);
-		serializer.writeObject(data);
-		Ok(b.toByteArray).as("application/x-amf")
-	}
+  }
+
+  def Amf(data: Any): Result = {
+    val b = new ByteArrayOutputStream();
+
+    val serializer = new AMF3Serializer(b);
+    serializer.writeObject(data);
+    Ok(b.toByteArray).as("application/x-amf")
+  }
 }
