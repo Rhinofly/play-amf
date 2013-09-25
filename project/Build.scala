@@ -4,7 +4,7 @@ import play.Project._
 
 object ApplicationBuild extends Build {
 
-  val appName = "amf"
+  val appName = "play-amf"
   val appVersion = "2.0.1"
 
   val appDependencies = Seq(
