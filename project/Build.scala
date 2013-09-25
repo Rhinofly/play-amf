@@ -8,8 +8,6 @@ object ApplicationBuild extends Build {
   val appVersion = "2.0.1"
 
   val appDependencies = Seq(
-	jdbc,
-    anorm,
     "com.exadel.flamingo.flex" % "amf-serializer" % "1.5.0")
 
   def rhinoflyRepo(version:String) = {
